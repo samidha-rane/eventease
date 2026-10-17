@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -10,4 +5,123 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  PARTICIPANT
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum RegistrationStatus {
+  CONFIRMED
+  WAITLISTED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  phone        String?
+  role         Role     @default(PARTICIPANT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  createdEvents Event[]
+  registrations Registration[]
+  feedback      Feedback[]
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  events Event[]
+}
+
+model Venue {
+  id         String   @id @default(cuid())
+  name       String
+  address    String
+  capacity   Int
+  facilities String[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  events Event[]
+}
+
+model Event {
+  id                   String      @id @default(cuid())
+  title                String
+  description          String
+  bannerUrl            String?
+  startsAt             DateTime
+  endsAt               DateTime
+  registrationDeadline DateTime
+  capacity             Int
+  status               EventStatus @default(DRAFT)
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  categoryId  String
+  venueId     String
+  createdById String
+
+  category  Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  venue     Venue    @relation(fields: [venueId], references: [id], onDelete: Restrict)
+  createdBy User     @relation(fields: [createdById], references: [id], onDelete: Restrict)
+
+  registrations Registration[]
+  feedback      Feedback[]
+
+  @@index([status, startsAt])
+  @@index([categoryId])
+  @@index([venueId, startsAt, endsAt])
+}
+
+model Registration {
+  id           String             @id @default(cuid())
+  status       RegistrationStatus @default(CONFIRMED)
+  ticketCode   String             @unique @default(uuid())
+  registeredAt DateTime           @default(now())
+  cancelledAt  DateTime?
+  checkedInAt  DateTime?
+  updatedAt    DateTime           @updatedAt
+
+  userId  String
+  eventId String
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Restrict)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, eventId])
+  @@index([eventId, status])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  userId  String
+  eventId String
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Restrict)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, eventId])
+  @@index([eventId])
 }
