@@ -3,6 +3,8 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import type { Request, Response } from 'express'
 import { authRouter } from './routes/auth.routes'
+import { categoryRouter } from './routes/category.routes'
+import { venueRouter } from './routes/venue.routes'
 import { errorHandler, notFound } from './middleware/errorHandler'
 
 export const app = express()
@@ -20,6 +22,8 @@ app.get('/api/health', (_req: Request, res: Response) => {
 })
 
 app.use('/api/auth', authRouter)
+app.use('/api/categories', categoryRouter)
+app.use('/api/venues', venueRouter)
 
 // These two must stay last
 app.use(notFound)
