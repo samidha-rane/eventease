@@ -1,11 +1,15 @@
 import express from 'express'
 import cors from 'cors'
-import type { NextFunction, Request, Response } from 'express'
+import cookieParser from 'cookie-parser'
+import type { Request, Response } from 'express'
+import { authRouter } from './routes/auth.routes'
+import { errorHandler, notFound } from './middleware/errorHandler'
 
 export const app = express()
 
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
 app.use(express.json())
+app.use(cookieParser())
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
@@ -15,11 +19,8 @@ app.get('/api/health', (_req: Request, res: Response) => {
   })
 })
 
-app.use((_req: Request, res: Response) => {
-  res.status(404).json({ message: 'Route not found' })
-})
+app.use('/api/auth', authRouter)
 
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  console.error(err)
-  res.status(500).json({ message: 'Something went wrong' })
-})
+// These two must stay last
+app.use(notFound)
+app.use(errorHandler)
