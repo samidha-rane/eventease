@@ -9,6 +9,7 @@ import {
   remove,
   update,
 } from '../controllers/event.controller'
+import { register } from '../controllers/registration.controller'
 import { optionalAuth, requireAdmin, requireAuth } from '../middleware/auth'
 
 export const eventRouter = Router()
@@ -23,3 +24,6 @@ eventRouter.post('/:id/publish', requireAuth, requireAdmin, publish)
 eventRouter.post('/:id/cancel', requireAuth, requireAdmin, cancel)
 eventRouter.post('/:id/complete', requireAuth, requireAdmin, complete)
 eventRouter.delete('/:id', requireAuth, requireAdmin, remove)
+
+// Any logged-in user can register
+eventRouter.post('/:id/register', requireAuth, register)

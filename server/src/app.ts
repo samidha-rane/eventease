@@ -6,6 +6,7 @@ import { authRouter } from './routes/auth.routes'
 import { categoryRouter } from './routes/category.routes'
 import { venueRouter } from './routes/venue.routes'
 import { eventRouter } from './routes/event.routes'
+import { registrationRouter } from './routes/registration.routes'
 import { errorHandler, notFound } from './middleware/errorHandler'
 
 export const app = express()
@@ -26,6 +27,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/categories', categoryRouter)
 app.use('/api/venues', venueRouter)
 app.use('/api/events', eventRouter)
+app.use('/api/registrations', registrationRouter)
 
 // These two must stay last
 app.use(notFound)

@@ -26,6 +26,11 @@ export function errorHandler(
     return res.status(err.statusCode).json({ message: err.message })
   }
 
+  // Invalid JSON in the request body, such as a stray character
+  if ((err as { type?: string })?.type === 'entity.parse.failed') {
+    return res.status(400).json({ message: 'The request body is not valid JSON' })
+  }
+
   console.error(err)
   res.status(500).json({ message: 'Something went wrong' })
 }
