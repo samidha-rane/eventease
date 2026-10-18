@@ -57,3 +57,40 @@ export type PageMeta = {
   total: number
   totalPages: number
 }
+
+
+export type Venue = {
+  id: string
+  name: string
+  address: string
+  capacity: number
+  facilities: string[]
+  _count?: { events: number }
+}
+
+export type Overview = {
+  totals: {
+    events: number
+    participants: number
+    registrations: number
+    upcomingEvents: number
+  }
+  registrationsOverTime: { date: string; count: number }[]
+  categoryBreakdown: { id: string; name: string; events: number }[]
+  feedback: { count: number; averageRating: number | null }
+  recentRegistrations: {
+    id: string
+    status: RegistrationStatus
+    registeredAt: string
+    user: { name: string; email: string }
+    event: { id: string; title: string }
+  }[]
+  upcomingEvents: {
+    id: string
+    title: string
+    startsAt: string
+    capacity: number
+    venue: { name: string }
+    registeredCount: number
+  }[]
+}

@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import PublicLayout from '@/layouts/PublicLayout'
+import AdminLayout from '@/layouts/AdminLayout'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Home from '@/pages/Home'
 import Login from '@/pages/Login'
@@ -8,7 +9,8 @@ import Events from '@/pages/Events'
 import EventDetail from '@/pages/EventDetail'
 import MyRegistrations from '@/pages/MyRegistrations'
 import HowItWorks from '@/pages/HowItWorks'
-import Soon from '@/pages/Soon'
+import Dashboard from '@/pages/admin/Dashboard'
+import AdminEvents from '@/pages/admin/AdminEvents'
 import NotFound from '@/pages/NotFound'
 
 export default function App() {
@@ -28,7 +30,10 @@ export default function App() {
         </Route>
 
         <Route element={<ProtectedRoute role="ADMIN" />}>
-          <Route path="admin" element={<Soon title="Admin dashboard" />} />
+          <Route path="admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="events" element={<AdminEvents />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<NotFound />} />
