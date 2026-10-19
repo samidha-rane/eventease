@@ -94,3 +94,58 @@ export type Overview = {
     registeredCount: number
   }[]
 }
+
+export type AdminRegistration = {
+  id: string
+  status: RegistrationStatus
+  ticketCode: string
+  registeredAt: string
+  user: { id: string; name: string; email: string; phone: string | null }
+  event: {
+    id: string
+    title: string
+    startsAt: string
+    endsAt: string
+    status: EventStatus
+    venue: { name: string; address: string }
+  }
+}
+
+export type FeedbackItem = {
+  id: string
+  rating: number
+  comment: string | null
+  createdAt: string
+  user: { id: string; name: string; email: string }
+  event: { id: string; title: string }
+}
+
+export type ParticipantRow = {
+  id: string
+  name: string
+  email: string
+  phone: string | null
+  createdAt: string
+  _count: { registrations: number }
+}
+
+export type ParticipantDetail = {
+  id: string
+  name: string
+  email: string
+  phone: string | null
+  createdAt: string
+  registrations: {
+    id: string
+    status: RegistrationStatus
+    registeredAt: string
+    checkedInAt: string | null
+    event: { id: string; title: string; startsAt: string; status: EventStatus }
+  }[]
+  feedback: {
+    id: string
+    rating: number
+    comment: string | null
+    event: { id: string; title: string }
+  }[]
+}

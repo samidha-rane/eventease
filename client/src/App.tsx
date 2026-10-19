@@ -11,6 +11,11 @@ import MyRegistrations from '@/pages/MyRegistrations'
 import HowItWorks from '@/pages/HowItWorks'
 import Dashboard from '@/pages/admin/Dashboard'
 import AdminEvents from '@/pages/admin/AdminEvents'
+import Registrations from '@/pages/admin/Registrations'
+import Participants from '@/pages/admin/Participants'
+import Feedback from '@/pages/admin/Feedback'
+import Venues from '@/pages/admin/Venues'
+import Categories from '@/pages/admin/Categories'
 import NotFound from '@/pages/NotFound'
 
 export default function App() {
@@ -33,6 +38,11 @@ export default function App() {
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="events" element={<AdminEvents />} />
+            <Route path="registrations" element={<Registrations />} />
+            <Route path="participants" element={<Participants />} />
+            <Route path="feedback" element={<Feedback />} />
+            <Route path="venues" element={<Venues />} />
+            <Route path="categories" element={<Categories />} />
           </Route>
         </Route>
 
