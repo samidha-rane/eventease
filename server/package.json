@@ -11,7 +11,8 @@
     "db:seed": "tsx src/scripts/seed.ts",
     "test:race": "tsx src/scripts/race-test.ts",
     "demo:seed": "tsx src/scripts/seed-demo.ts",
-    "demo:clear": "tsx src/scripts/seed-demo.ts clear"
+    "demo:clear": "tsx src/scripts/seed-demo.ts clear",
+    "start": "tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
