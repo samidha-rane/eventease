@@ -1,0 +1,128 @@
+/* EventEase theme: indigo ink + marigold. Import once in main.jsx: import "./ee-theme.css"; */
+:root {
+  --ink: #1E1B3A;
+  --ink-soft: #3B3663;
+  --marigold: #F5A524;
+  --marigold-light: #FFB93D;
+  --hibiscus: #E4405F;
+  --paper: #FBF8FF;
+  --mist: #EDE7FB;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, sans-serif;
+  --radius-m: 16px;
+  --radius-l: 28px;
+}
+
+/* Bigger type: 18px base. Everything sized in rem scales with it. */
+html { font-size: 112.5%; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.65;
+}
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+h1 { font-size: clamp(2.6rem, 6vw, 4.75rem); }
+h2 { font-size: clamp(2rem, 4vw, 3rem); }
+h3 { font-size: 1.5rem; }
+
+:focus-visible { outline: 3px solid var(--marigold); outline-offset: 3px; }
+
+/* Buttons */
+.ee-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.9rem 1.6rem; border-radius: 999px;
+  font-weight: 700; font-size: 1.05rem; text-decoration: none;
+  border: 2px solid transparent; cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.ee-btn:active { transform: translateY(1px) scale(.98); }
+.ee-btn--primary { background: var(--marigold); color: var(--ink); }
+.ee-btn--primary:hover {
+  background: var(--marigold-light); transform: translateY(-2px);
+  box-shadow: 0 10px 24px -8px rgba(245, 165, 36, .6);
+}
+.ee-btn--ghost { border-color: currentColor; color: inherit; background: transparent; }
+.ee-btn--ghost:hover { background: rgba(255, 255, 255, .1); }
+
+/* Logo */
+.ee-logo { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; color: inherit; }
+.ee-logo__word { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: -0.02em; }
+.ee-logo__word b { font-weight: 800; }
+.ee-logo__word span { font-weight: 400; }
+
+/* Hero */
+.ee-hero { background: var(--ink); color: var(--paper); padding: clamp(4rem, 9vw, 8rem) 1.5rem; overflow: hidden; }
+.ee-hero__inner {
+  max-width: 1180px; margin: 0 auto; display: grid; gap: 3rem;
+  grid-template-columns: 1.15fr .85fr; align-items: center;
+}
+@media (max-width: 860px) { .ee-hero__inner { grid-template-columns: 1fr; } }
+.ee-hero h1 { margin: 0 0 1.25rem; }
+.ee-hero__lead { font-size: 1.2rem; color: #D9D3F0; max-width: 34rem; margin: 0 0 2rem; }
+.ee-hero__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+/* The one orchestrated moment: hero text rises in sequence, then the ticket lands. */
+.ee-rise { animation: ee-rise .8s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i, 0) * 120ms); }
+@keyframes ee-rise { from { opacity: 0; transform: translateY(28px); } }
+
+/* Ticket (the memorable element) */
+.ee-ticket {
+  position: relative; background: var(--marigold); color: var(--ink);
+  border-radius: var(--radius-m); padding: 2rem 2.2rem; max-width: 420px; justify-self: center;
+  transform: rotate(-3deg);
+  animation: ee-ticket-in 1s cubic-bezier(.2, .9, .25, 1.1) .5s both;
+  -webkit-mask:
+    radial-gradient(circle 14px at 72% 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 14px at 72% 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  mask:
+    radial-gradient(circle 14px at 72% 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 14px at 72% 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+}
+.ee-ticket::after {
+  content: ""; position: absolute; top: 18px; bottom: 18px; left: 72%;
+  border-left: 2px dashed rgba(30, 27, 58, .35);
+}
+.ee-ticket__main { width: 66%; display: grid; gap: .35rem; }
+.ee-ticket__title { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; line-height: 1.1; }
+.ee-ticket__meta { font-size: 1rem; }
+.ee-ticket__stub {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 28%;
+  display: grid; place-items: center; font-weight: 800; writing-mode: vertical-rl; letter-spacing: .08em;
+}
+@keyframes ee-ticket-in { from { opacity: 0; transform: translateY(-60px) rotate(-14deg); } }
+
+/* Stats */
+.ee-stats { background: var(--mist); padding: 4rem 1.5rem; }
+.ee-stats__grid {
+  max-width: 1180px; margin: 0 auto; display: grid; gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+.ee-stat__num { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.8rem, 5vw, 4rem); line-height: 1; }
+.ee-stat__label { font-size: 1.1rem; color: var(--ink-soft); margin-top: .4rem; }
+
+/* Category marquee */
+.ee-marquee { background: var(--marigold); color: var(--ink); overflow: hidden; padding: 1.1rem 0; }
+.ee-marquee__track { display: flex; width: max-content; animation: ee-scroll 36s linear infinite; }
+.ee-marquee:hover .ee-marquee__track { animation-play-state: paused; }
+.ee-marquee__group { display: flex; gap: 2rem; padding-right: 2rem; }
+.ee-marquee__item { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; white-space: nowrap; }
+@keyframes ee-scroll { to { transform: translateX(-50%); } }
+
+/* Event cards (apply class ee-card to your existing event card element) */
+.ee-card {
+  background: #fff; border-radius: var(--radius-m); overflow: hidden;
+  border: 1px solid rgba(30, 27, 58, .1);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.ee-card:hover { transform: translateY(-6px); box-shadow: 0 18px 36px -18px rgba(30, 27, 58, .45); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ee-rise, .ee-ticket, .ee-marquee__track { animation: none !important; }
+  .ee-card, .ee-btn { transition: none; }
+}
