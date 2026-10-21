@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import { prisma } from './lib/prisma'
 import cookieParser from 'cookie-parser'
 import type { Request, Response } from 'express'
 import { authRouter } from './routes/auth.routes'
@@ -23,12 +24,13 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
 
-app.get('/api/health', (_req: Request, res: Response) => {
-  res.json({
-    status: 'ok',
-    service: 'eventease-api',
-    time: new Date().toISOString(),
-  })
+app.get('/api/health/db', async (_req: Request, res: Response) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`
+    res.json({ status: 'ok', database: 'up' })
+  } catch {
+    res.status(503).json({ status: 'error', database: 'down' })
+  }
 })
 
 app.use('/api/auth', authRouter)

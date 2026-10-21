@@ -35,8 +35,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw error
       }
     },
-    staleTime: 5 * 60 * 1000,
-    retry: false,
+            staleTime: 5 * 60 * 1000,
+    // If the server is waking up, keep trying instead of showing "logged out"
+    retry: (count, error) =>
+      !(error instanceof ApiError && error.status >= 400 && error.status < 500) && count < 5,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 6000),
   })
 
   const value: AuthValue = {
