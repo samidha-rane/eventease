@@ -10,7 +10,6 @@ import {
   Sparkles,
   Ticket,
   UserPlus,
-  Users,
   Zap,
 } from 'lucide-react'
 import CountUp from '@/components/CountUp'
@@ -96,12 +95,12 @@ function Landing() {
     <>
       <section className="px-4 pt-6">
         <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-ink px-6 py-16 sm:px-10 md:px-16 md:py-24">
-          <div aria-hidden="true" className="absolute -right-24 -top-28 size-[26rem] animate-drift rounded-full bg-brand/60 blur-3xl" />
-          <div aria-hidden="true" className="absolute -bottom-32 -left-20 size-[24rem] animate-drift rounded-full bg-coral/40 blur-3xl [animation-delay:-6s]" />
+          <div aria-hidden="true" className="absolute -right-24 -top-28 size-104 animate-drift rounded-full bg-brand/60 blur-3xl" />
+          <div aria-hidden="true" className="absolute -bottom-32 -left-20 size-96ate-drift rounded-full bg-coral/40 blur-3xl [animation-delay:-6s]" />
           <div aria-hidden="true" className="absolute right-1/3 top-1/2 size-48 animate-drift rounded-full bg-sun/20 blur-3xl [animation-delay:-3s]" />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.09)_1px,transparent_1px)] [background-size:26px_26px]"
+            className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.09)_1px,transparent_1px)] bg-size-[26px_26px]"
           />
 
           <div className="relative grid items-center gap-14 md:grid-cols-[1.15fr_1fr]">
@@ -140,7 +139,7 @@ function Landing() {
               </div>
             </div>
 
-            <div className="relative mx-auto hidden h-[26rem] w-full max-w-sm md:block" aria-hidden="true">
+            <div className="relative mx-auto hidden h-104 w-full max-w-sm md:block" aria-hidden="true">
               <div className="animate-float absolute left-0 top-12 w-72 -rotate-6 rounded-3xl bg-white p-6 text-ink shadow-2xl">
                 <div className="flex items-center justify-between">
                   <span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-bold text-brand-dark">
