@@ -4,6 +4,7 @@ import { useIsFetching } from '@tanstack/react-query'
 import { Menu, X } from 'lucide-react'
 import Logo from '@/components/Logo'
 import { useAuth } from '@/hooks/auth'
+import ScrollProgress from '@/components/ScrollProgress'
 import { btnGhost, btnPrimary } from '@/lib/styles'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -48,7 +49,8 @@ export default function PublicLayout() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen flex-col">
+      <ScrollProgress />
       {slow && (
         <div
           role="status"

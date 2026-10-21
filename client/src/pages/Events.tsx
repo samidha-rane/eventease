@@ -5,6 +5,7 @@ import { Search, SearchX } from 'lucide-react'
 import EventCard from '@/components/EventCard'
 import Pagination from '@/components/Pagination'
 import { useAuth } from '@/hooks/auth'
+import Reveal from '@/components/Reveal'
 import { useCategories, useEvents, useMyRegistrations } from '@/hooks/queries'
 import { registrationMap } from '@/lib/registrations'
 import { btnGhost, btnPrimary, inputCls } from '@/lib/styles'
@@ -84,7 +85,7 @@ export default function Events() {
   const filtered = Boolean(q || categoryId || status || from || to || when !== 'upcoming')
 
   const chip = (active: boolean) =>
-    `rounded-full border px-4 py-2 text-sm font-semibold transition ${
+        `rounded-full border px-4 py-2 text-sm font-semibold transition active:scale-95 ${
       active
         ? 'border-brand bg-brand text-white'
         : 'border-line bg-card text-ink hover:border-brand hover:text-brand-dark'
@@ -279,8 +280,10 @@ export default function Events() {
                 isPlaceholderData ? 'opacity-60' : ''
               }`}
             >
-              {data.events.map((event) => (
-                <EventCard key={event.id} event={event} registered={registered.get(event.id)} />
+                           {data.events.map((event, index) => (
+                <Reveal key={event.id} delay={(index % 3) * 110} className="h-full">
+                  <EventCard event={event} registered={registered.get(event.id)} />
+                </Reveal>
               ))}
             </div>
             <Pagination

@@ -95,7 +95,7 @@ export default function EventCard({ event, registered }: Props) {
           </div>
           <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-line">
             <div
-              className={`h-full rounded-full transition-all ${
+               className={`animate-grow h-full rounded-full transition-all ${
                 filled >= 90 ? 'bg-amber-500' : 'bg-brand'
               }`}
               style={{ width: `${filled}%` }}
