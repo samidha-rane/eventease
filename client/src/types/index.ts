@@ -41,6 +41,7 @@ export type Registration = {
   ticketCode: string
   registeredAt: string
   cancelledAt: string | null
+  checkedInAt: string | null
   event: {
     id: string
     title: string
@@ -99,6 +100,7 @@ export type AdminRegistration = {
   id: string
   status: RegistrationStatus
   ticketCode: string
+  checkedInAt: string | null
   registeredAt: string
   user: { id: string; name: string; email: string; phone: string | null }
   event: {

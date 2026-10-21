@@ -8,6 +8,7 @@ import Register from '@/pages/Register'
 import Events from '@/pages/Events'
 import EventDetail from '@/pages/EventDetail'
 import MyRegistrations from '@/pages/MyRegistrations'
+import Profile from '@/pages/Profile'
 import HowItWorks from '@/pages/HowItWorks'
 import Dashboard from '@/pages/admin/Dashboard'
 import AdminEvents from '@/pages/admin/AdminEvents'
@@ -32,6 +33,7 @@ export default function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="my-registrations" element={<MyRegistrations />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         <Route element={<ProtectedRoute role="ADMIN" />}>

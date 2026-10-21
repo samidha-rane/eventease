@@ -62,6 +62,24 @@ export default function Registrations() {
     },
   })
 
+    const change = useMutation({
+    mutationFn: ({ id, action }: { id: string; action: 'confirm' | 'check-in' }) =>
+      api(`/registrations/${id}/${action}`, { method: 'POST' }),
+    onSuccess: () => {
+      setProblem('')
+      queryClient.invalidateQueries({ queryKey: ['admin-registrations'] })
+      queryClient.invalidateQueries({ queryKey: ['overview'] })
+      queryClient.invalidateQueries({ queryKey: ['events'] })
+      queryClient.invalidateQueries({ queryKey: ['event'] })
+    },
+    onError: (error) => {
+      setProblem(error instanceof ApiError ? error.message : 'Something went wrong')
+    },
+  })
+
+  const smallOk =
+    'rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:opacity-50'
+
   function setParam(key: string, value: string) {
     const next = new URLSearchParams(sp)
     if (value) next.set(key, value)
@@ -226,13 +244,42 @@ export default function Registrations() {
                   <td className="px-5 py-4 whitespace-nowrap">{formatDate(row.registeredAt)}</td>
                   <td className="px-5 py-4">
                     <StatusPill status={row.status} />
-                  </td>
-                  <td className="px-5 py-4 text-right">
-                    {row.status !== 'CANCELLED' && (
-                      <button type="button" className={smallDanger} onClick={() => setTarget(row)}>
-                        Cancel
-                      </button>
+                    {row.checkedInAt && (
+                      <span className="mt-1 block text-xs font-semibold text-emerald-700">
+                        Checked in
+                      </span>
                     )}
+                  </td>
+                                    <td className="px-5 py-4">
+                    <div className="flex justify-end gap-1.5">
+                      {row.status === 'WAITLISTED' && (
+                        <button
+                          type="button"
+                          className={smallOk}
+                          disabled={change.isPending}
+                          onClick={() => change.mutate({ id: row.id, action: 'confirm' })}
+                        >
+                          Confirm
+                        </button>
+                      )}
+                      {row.status === 'CONFIRMED' &&
+                        !row.checkedInAt &&
+                        row.event.status !== 'CANCELLED' && (
+                          <button
+                            type="button"
+                            className={smallOk}
+                            disabled={change.isPending}
+                            onClick={() => change.mutate({ id: row.id, action: 'check-in' })}
+                          >
+                            Check in
+                          </button>
+                        )}
+                      {row.status !== 'CANCELLED' && (
+                        <button type="button" className={smallDanger} onClick={() => setTarget(row)}>
+                          Cancel
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

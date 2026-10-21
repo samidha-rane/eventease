@@ -3,20 +3,22 @@ import { Link } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { MapPin, Ticket } from 'lucide-react'
 import ConfirmDialog from '@/components/ConfirmDialog'
+import RateDialog from '@/components/RateDialog'
 import StatusPill from '@/components/StatusPill'
-import { useMyRegistrations } from '@/hooks/queries'
+import { useMyFeedback, useMyRegistrations } from '@/hooks/queries'
 import { api, ApiError } from '@/lib/api'
 import { formatDate, formatRange } from '@/lib/format'
-import { btnDanger, btnPrimary } from '@/lib/styles'
+import { btnDanger, btnGhost, btnPrimary } from '@/lib/styles'
 import type { Registration } from '@/types'
 
-function TicketCard({
-  registration,
-  onCancel,
-}: {
+type Props = {
   registration: Registration
   onCancel?: () => void
-}) {
+  onRate?: () => void
+  rated?: number
+}
+
+function TicketCard({ registration, onCancel, onRate, rated }: Props) {
   const { event } = registration
   const muted = registration.status === 'CANCELLED'
 
@@ -29,6 +31,11 @@ function TicketCard({
       <div className="flex-1 p-6">
         <div className="flex flex-wrap items-center gap-2">
           <StatusPill status={registration.status} />
+          {registration.checkedInAt && (
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+              Checked in
+            </span>
+          )}
           <span className="text-xs text-muted">Registered {formatDate(registration.registeredAt)}</span>
         </div>
         <h3 className="mt-3 text-xl font-bold tracking-tight">
@@ -45,17 +52,33 @@ function TicketCard({
         </p>
       </div>
 
-      <div className="flex flex-row items-center justify-between gap-4 border-t-2 border-dashed border-line bg-paper p-6 sm:w-56 sm:flex-col sm:justify-center sm:border-l-2 sm:border-t-0">
+      <div className="flex flex-row items-center justify-between gap-4 border-t-2 border-dashed border-line bg-paper p-6 sm:w-60 sm:flex-col sm:justify-center sm:border-l-2 sm:border-t-0">
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-wide text-muted">Ticket</p>
           <p className="mt-1 font-mono text-lg font-bold tracking-widest">
             {registration.ticketCode.slice(0, 8).toUpperCase()}
           </p>
         </div>
+
         {onCancel && (
           <button type="button" className={`${btnDanger} px-4 py-2`} onClick={onCancel}>
             Cancel
           </button>
+        )}
+
+        {rated !== undefined ? (
+          <p className="text-center text-sm font-semibold text-amber-600">
+            You rated it
+            <span className="block text-lg" aria-label={`${rated} out of 5 stars`}>
+              {'★'.repeat(rated)}
+            </span>
+          </p>
+        ) : (
+          onRate && (
+            <button type="button" className={`${btnGhost} px-4 py-2`} onClick={onRate}>
+              Rate this event
+            </button>
+          )
         )}
       </div>
     </article>
@@ -65,8 +88,12 @@ function TicketCard({
 export default function MyRegistrations() {
   const queryClient = useQueryClient()
   const { data, isPending, isError } = useMyRegistrations(true)
+  const feedback = useMyFeedback(true)
   const [target, setTarget] = useState<Registration | null>(null)
+  const [rateTarget, setRateTarget] = useState<{ id: string; title: string } | null>(null)
   const [problem, setProblem] = useState('')
+
+  const ratedMap = new Map((feedback.data ?? []).map((item) => [item.eventId, item.rating]))
 
   const cancel = useMutation({
     mutationFn: (id: string) =>
@@ -141,9 +168,23 @@ export default function MyRegistrations() {
         <section className="mt-10">
           <h2 className="mb-4 text-lg font-bold">History</h2>
           <div className="space-y-4">
-            {history.map((item) => (
-              <TicketCard key={item.id} registration={item} />
-            ))}
+            {history.map((item) => {
+              const ended = new Date(item.event.endsAt).getTime() <= now
+              const canRate =
+                item.status === 'CONFIRMED' && ended && item.event.status !== 'CANCELLED'
+              return (
+                <TicketCard
+                  key={item.id}
+                  registration={item}
+                  rated={canRate ? ratedMap.get(item.event.id) : undefined}
+                  onRate={
+                    canRate
+                      ? () => setRateTarget({ id: item.event.id, title: item.event.title })
+                      : undefined
+                  }
+                />
+              )
+            })}
           </div>
         </section>
       )}
@@ -161,6 +202,8 @@ export default function MyRegistrations() {
         onConfirm={() => target && cancel.mutate(target.id)}
         onCancel={() => setTarget(null)}
       />
+
+      <RateDialog event={rateTarget} onClose={() => setRateTarget(null)} />
     </div>
   )
 }

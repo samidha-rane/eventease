@@ -32,7 +32,12 @@ export default function PublicLayout() {
   const links = [
     { to: '/events', label: 'Events' },
     { to: '/how-it-works', label: 'How it works' },
-    ...(user ? [{ to: '/my-registrations', label: 'My tickets' }] : []),
+        ...(user
+      ? [
+          { to: '/my-registrations', label: 'My tickets' },
+          { to: '/profile', label: 'Profile' },
+        ]
+      : []),
     ...(user?.role === 'ADMIN' ? [{ to: '/admin', label: 'Dashboard' }] : []),
   ]
 

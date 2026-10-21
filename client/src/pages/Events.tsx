@@ -34,6 +34,19 @@ export default function Events() {
   const categoryId = sp.get('categoryId') ?? ''
   const when = sp.get('when') ?? 'upcoming'
   const page = Math.max(1, Number(sp.get('page')) || 1)
+  const status = sp.get('status') ?? ''
+  const from = sp.get('from') ?? ''
+  const to = sp.get('to') ?? ''
+
+  function chooseStatus(value: string) {
+    const next = new URLSearchParams(sp)
+    if (value) next.set('status', value)
+    else next.delete('status')
+    // Finished events are in the past, so show past ones too
+    if (value === 'COMPLETED' && when === 'upcoming') next.set('when', 'all')
+    next.delete('page')
+    setSp(next)
+  }
 
   const [text, setText] = useState(q)
 
@@ -59,13 +72,16 @@ export default function Events() {
   if (q) params.set('q', q)
   if (categoryId) params.set('categoryId', categoryId)
   if (when === 'upcoming' || when === 'past') params.set('when', when)
+  if (status) params.set('status', status)
+  if (from) params.set('from', from)
+  if (to) params.set('to', to)
   params.set('page', String(page))
   params.set('limit', String(PAGE_SIZE))
   params.set('sort', 'startsAt')
   params.set('order', when === 'past' ? 'desc' : 'asc')
 
   const { data, isPending, isError, isPlaceholderData } = useEvents(params.toString())
-  const filtered = Boolean(q || categoryId || when !== 'upcoming')
+  const filtered = Boolean(q || categoryId || status || from || to || when !== 'upcoming')
 
   const chip = (active: boolean) =>
     `rounded-full border px-4 py-2 text-sm font-semibold transition ${
@@ -167,6 +183,50 @@ export default function Events() {
             Clear all filters
           </button>
         )}
+      </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        <div>
+          <label htmlFor="from" className="mb-1 block text-sm font-semibold">
+            From date
+          </label>
+          <input
+            id="from"
+            type="date"
+            value={from}
+            max={to || undefined}
+            onChange={(event) => setParam('from', event.target.value)}
+            className={inputCls}
+          />
+        </div>
+        <div>
+          <label htmlFor="to" className="mb-1 block text-sm font-semibold">
+            To date
+          </label>
+          <input
+            id="to"
+            type="date"
+            value={to}
+            min={from || undefined}
+            onChange={(event) => setParam('to', event.target.value)}
+            className={inputCls}
+          />
+        </div>
+        <div>
+          <label htmlFor="status" className="mb-1 block text-sm font-semibold">
+            Status
+          </label>
+          <select
+            id="status"
+            value={status}
+            onChange={(event) => chooseStatus(event.target.value)}
+            className={inputCls}
+          >
+            <option value="">Any status</option>
+            <option value="PUBLISHED">Open for registration</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
+        </div>
       </div>
 
       <div className="mt-8" aria-live="polite">

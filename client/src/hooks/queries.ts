@@ -34,3 +34,15 @@ export function useMyRegistrations(enabled: boolean) {
     enabled,
   })
 }
+
+
+export type MyFeedback = { eventId: string; rating: number; comment: string | null }
+
+export function useMyFeedback(enabled: boolean) {
+  return useQuery({
+    queryKey: ['my-feedback'],
+    queryFn: async () =>
+      (await api<{ feedback: MyFeedback[] }>('/registrations/me/feedback')).feedback,
+    enabled,
+  })
+}
