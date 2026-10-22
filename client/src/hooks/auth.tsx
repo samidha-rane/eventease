@@ -45,21 +45,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthValue = {
     user: data ?? null,
     loading: isLoading,
-    async login(input) {
+        async login(input) {
       const result = await api<{ user: User }>('/auth/login', { method: 'POST', body: input })
+      // Forget anything left over from a previous person on this browser
+      queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== 'me' })
       queryClient.setQueryData(['me'], result.user)
       return result.user
     },
     async register(input) {
       const result = await api<{ user: User }>('/auth/register', { method: 'POST', body: input })
+      queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== 'me' })
       queryClient.setQueryData(['me'], result.user)
       return result.user
     },
     async logout() {
-      await api('/auth/logout', { method: 'POST' })
-      queryClient.clear()
-      queryClient.setQueryData(['me'], null)
+      try {
+        await api('/auth/logout', { method: 'POST' })
+      } finally {
+        // Update the screen straight away, with no refresh needed
+        await queryClient.cancelQueries({ queryKey: ['me'] })
+        queryClient.setQueryData(['me'], null)
+        // Remove the logged-out person's tickets and admin data from memory
+        queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== 'me' })
+      }
     },
+
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

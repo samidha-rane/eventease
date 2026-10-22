@@ -41,9 +41,12 @@ export default function PublicLayout() {
       : []),
     ...(user?.role === 'ADMIN' ? [{ to: '/admin', label: 'Dashboard' }] : []),
   ]
-
   async function handleLogout() {
-    await logout()
+    try {
+      await logout()
+    } catch {
+      // The screen has already switched to logged-out
+    }
     setOpen(false)
     navigate('/')
   }

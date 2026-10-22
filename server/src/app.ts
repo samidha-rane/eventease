@@ -24,6 +24,12 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
 
+// Logged-in data must never be reused from the browser's cache
+app.use('/api', (_req: Request, res: Response, next) => {
+  res.setHeader('Cache-Control', 'no-store')
+  next()
+})
+
 app.get('/api/health/db', async (_req: Request, res: Response) => {
   try {
     await prisma.$queryRaw`SELECT 1`
