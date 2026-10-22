@@ -12,7 +12,8 @@
     "test:race": "tsx src/scripts/race-test.ts",
     "demo:seed": "tsx src/scripts/seed-demo.ts",
     "demo:clear": "tsx src/scripts/seed-demo.ts clear",
-    "start": "tsx src/server.ts"
+    "start": "tsx src/server.ts",
+    "admin:reset": "tsx src/scripts/reset-admin-password.ts"
   },
   "keywords": [],
   "author": "",
