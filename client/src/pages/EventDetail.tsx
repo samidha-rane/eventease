@@ -62,7 +62,7 @@ export default function EventDetail() {
       </div>
     )
   }
-
+  const photo = eventImage(event)
   const mine = myRegistrations.data?.find(
     (item) => item.event.id === event.id && item.status !== 'CANCELLED',
   )
@@ -130,12 +130,19 @@ export default function EventDetail() {
       </Link>
 
       <div className="overflow-hidden rounded-3xl border border-line bg-card">
-                        <img
-          src={eventImage(event).src}
-          alt=""
-          style={{ objectPosition: eventImage(event).position }}
-          className="h-56 w-full object-cover md:h-80"
-        />
+                                <div className="relative grid h-40 place-items-center overflow-hidden bg-linear-to-br from-ink via-brand-dark to-brand md:h-52">
+          <div
+            aria-hidden="true"
+            className="absolute -left-10 top-0 size-56 animate-drift rounded-full bg-coral/40 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute -right-10 bottom-0 size-56 animate-drift rounded-full bg-sun/25 blur-3xl [animation-delay:-5s]"
+          />
+          <span className="relative font-display text-5xl font-extrabold text-white/25 md:text-7xl">
+            {event.category.name}
+          </span>
+        </div>
         <div className="grid gap-10 p-6 md:grid-cols-[1.5fr_1fr] md:p-10">
           <div>
             <div className="flex flex-wrap items-center gap-2">
@@ -152,6 +159,13 @@ export default function EventDetail() {
           </div>
 
           <aside className="h-fit space-y-5 rounded-3xl border border-line bg-paper p-6 md:sticky md:top-24">
+                        <img
+              src={photo.src}
+              alt=""
+              loading="lazy"
+              style={{ objectPosition: photo.position }}
+              className="aspect-[4/3] w-full rounded-2xl object-cover"
+            />
             <ul className="space-y-3 text-sm">
               {info.map(({ icon: Icon, label }) => (
                 <li key={label} className="flex gap-3">
