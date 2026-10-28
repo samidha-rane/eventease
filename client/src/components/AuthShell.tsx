@@ -12,7 +12,16 @@ export default function AuthShell({ title, subtitle, children, footer }: Props) 
   return (
     <div className="grid min-h-screen lg:grid-cols-[1fr_1.1fr]">
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-ink p-12 text-white lg:flex">
-        <Logo light />
+                <img
+          src="/images/bunting.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 size-full object-cover opacity-30"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-ink/60 to-ink/90" />
+        <div className="relative z-10">
+          <Logo light />
+        </div>
 
         <div className="relative z-10">
           <h2 className="font-display text-5xl font-extrabold leading-[1.05] tracking-tight">

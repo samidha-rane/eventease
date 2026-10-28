@@ -3,7 +3,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, CalendarDays, Clock, MapPin, Users } from 'lucide-react'
 import StatusPill from '@/components/StatusPill'
-import { tintFor } from '@/components/EventCard'
+import { categoryImage } from '@/lib/images'
 import { useAuth } from '@/hooks/auth'
 import { useEvent, useMyRegistrations } from '@/hooks/queries'
 import { api, ApiError } from '@/lib/api'
@@ -130,16 +130,11 @@ export default function EventDetail() {
       </Link>
 
       <div className="overflow-hidden rounded-3xl border border-line bg-card">
-        {event.bannerUrl ? (
-          <img src={event.bannerUrl} alt="" className="h-56 w-full object-cover md:h-72" />
-        ) : (
-          <div className={`grid h-56 place-items-center md:h-72 ${tintFor(event.category.name)}`}>
-            <span className="font-display text-6xl font-extrabold opacity-30 md:text-8xl">
-              {event.category.name}
-            </span>
-          </div>
-        )}
-
+                <img
+          src={event.bannerUrl ?? categoryImage(event.category.name)}
+          alt=""
+          className="h-56 w-full object-cover md:h-72"
+        />
         <div className="grid gap-10 p-6 md:grid-cols-[1.5fr_1fr] md:p-10">
           <div>
             <div className="flex flex-wrap items-center gap-2">

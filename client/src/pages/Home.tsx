@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import PhotoGallery from '@/components/PhotoGallery'
 import {
   ArrowRight,
   CalendarCheck,
@@ -95,6 +96,16 @@ function Landing() {
     <>
       <section className="px-4 pt-6">
         <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-ink px-6 py-16 sm:px-10 md:px-16 md:py-24">
+                    <img
+            src="/images/festival-ribbons.jpg"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 size-full object-cover opacity-40"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-linear-to-r from-ink via-ink/85 to-ink/30"
+          />
           <div aria-hidden="true" className="absolute -right-24 -top-28 size-104 animate-drift rounded-full bg-brand/60 blur-3xl" />
           <div aria-hidden="true" className="absolute -bottom-32 -left-20 size-96ate-drift rounded-full bg-coral/40 blur-3xl [animation-delay:-6s]" />
           <div aria-hidden="true" className="absolute right-1/3 top-1/2 size-48 animate-drift rounded-full bg-sun/20 blur-3xl [animation-delay:-3s]" />
@@ -239,6 +250,8 @@ function Landing() {
           </ol>
         </div>
       </section>
+
+            <PhotoGallery />
 
       <UpcomingSection registered={new Map()} />
 
