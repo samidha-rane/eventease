@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Check, Clock, MapPin } from 'lucide-react'
-import { categoryImage } from '@/lib/images'
+import { eventImage } from '@/lib/images'
 import { dateParts, formatTime } from '@/lib/format'
 import type { EventItem } from '@/types'
 
@@ -18,6 +18,7 @@ type Props = {
 export default function EventCard({ event, registered }: Props) {
   const { day, month } = dateParts(event.startsAt)
   const filled = Math.min(100, Math.round((event.registeredCount / event.capacity) * 100))
+  const photo = eventImage(event)
 
   return (
     <Link
@@ -25,11 +26,12 @@ export default function EventCard({ event, registered }: Props) {
       className="group flex flex-col overflow-hidden rounded-3xl border border-line bg-card transition duration-200 hover:-translate-y-1 hover:border-brand/40 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
     >
       <div className="relative h-44 overflow-hidden bg-ink">
-        <img
-          src={event.bannerUrl ?? categoryImage(event.category.name)}
+                <img
+          src={photo.src}
           alt=""
           loading="lazy"
-          className="size-full object-cover transition duration-700 group-hover:scale-110"
+          style={{ objectPosition: photo.position }}
+          className="size-full object-cover transition duration-700 group-hover:scale-105"
         />
         <div
           aria-hidden="true"

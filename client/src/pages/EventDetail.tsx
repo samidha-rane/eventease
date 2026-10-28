@@ -3,7 +3,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, CalendarDays, Clock, MapPin, Users } from 'lucide-react'
 import StatusPill from '@/components/StatusPill'
-import { categoryImage } from '@/lib/images'
+import { eventImage } from '@/lib/images'
 import { useAuth } from '@/hooks/auth'
 import { useEvent, useMyRegistrations } from '@/hooks/queries'
 import { api, ApiError } from '@/lib/api'
@@ -130,10 +130,11 @@ export default function EventDetail() {
       </Link>
 
       <div className="overflow-hidden rounded-3xl border border-line bg-card">
-                <img
-          src={event.bannerUrl ?? categoryImage(event.category.name)}
+                        <img
+          src={eventImage(event).src}
           alt=""
-          className="h-56 w-full object-cover md:h-72"
+          style={{ objectPosition: eventImage(event).position }}
+          className="h-56 w-full object-cover md:h-80"
         />
         <div className="grid gap-10 p-6 md:grid-cols-[1.5fr_1fr] md:p-10">
           <div>
