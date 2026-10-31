@@ -160,10 +160,18 @@ export async function createEvent(input: CreateEventInput, userId: string) {
   }
   validateShape(input, venue.capacity)
 
-  const created = await prisma.event.create({
-    data: { ...input, status: 'DRAFT', createdById: userId },
-    include,
-  })
+    const created = await prisma.$transaction(async (tx) => {
+    await lockVenue(tx, input.venueId)
+    await assertNoVenueConflict(tx, {
+      venueId: input.venueId,
+      startsAt: input.startsAt,
+      endsAt: input.endsAt,
+    })
+    return tx.event.create({
+      data: { ...input, status: 'DRAFT', createdById: userId },
+      include,
+    })
+  }, TX_OPTIONS)
   return toDto(created)
 }
 
@@ -215,8 +223,13 @@ export async function updateEvent(id: string, input: UpdateEventInput) {
   }
 
   const updated = await prisma.$transaction(async (tx) => {
-    await lockVenue(tx, merged.venueId)
-    if (current.status === 'PUBLISHED') {
+        await lockVenue(tx, merged.venueId)
+    // Re-check whenever the slot or venue changes, even for drafts
+    const moved =
+      merged.venueId !== current.venueId ||
+      merged.startsAt.getTime() !== current.startsAt.getTime() ||
+      merged.endsAt.getTime() !== current.endsAt.getTime()
+    if (current.status === 'PUBLISHED' || moved) {
       await assertNoVenueConflict(tx, {
         venueId: merged.venueId,
         startsAt: merged.startsAt,
